@@ -15,12 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->date('published_date');
-
-            $table->foreignId('author_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-
             $table->timestamps();
         });
     }

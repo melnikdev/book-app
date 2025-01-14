@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Author extends Model
 {
-
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'birthday',
+        'number_of_books'
+    ];
 
     public function books(): HasMany
     {
