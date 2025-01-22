@@ -28,6 +28,7 @@ class BookResource extends Resource
                 Forms\Components\TextInput::make('title')->required()->maxLength(255),
                 Forms\Components\DatePicker::make('published_date')->required()->maxDate(now()),
                 Forms\Components\Select::make('author_id')
+                    ->multiple()
                     ->relationship('authors', 'last_name')
                     ->searchable()
                     ->preload()

@@ -22,7 +22,6 @@ return new class extends Migration {
                 ->constrained('books')
                 ->onUpdate('SET NULL')
                 ->onDelete('CASCADE');
-            $table->timestamps();
         });
     }
 
