@@ -1,0 +1,19 @@
+type Author{
+    id: ID!,
+    firstName: String! @rename(attribute: "first_name"),
+    lastName: String! @rename(attribute: "last_name")
+}
+
+type Book{
+    id: ID!,
+    title: String!
+    authors: [Author!]! @belongsToMany
+}
+
+extend type Query {
+    "Find a single user by an identifying attribute."
+    book(
+        "Search by primary key."
+        id: ID @eq
+    ): Book @find
+}

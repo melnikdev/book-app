@@ -13,6 +13,8 @@
         "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "mll-lab/laravel-graphiql": "^3.2",
+        "nuwave/lighthouse": "^6.49",
         "spatie/laravel-permission": "^6.10",
         "tymon/jwt-auth": "^2.1"
     },
