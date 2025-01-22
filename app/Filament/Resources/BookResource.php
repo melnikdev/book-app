@@ -8,12 +8,15 @@ use App\Filament\Resources\BookResource\RelationManagers;
 use App\Models\Book;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BookResource extends Resource
 {
@@ -53,12 +56,35 @@ class BookResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Split::make([
+                    Section::make([
+                        TextEntry::make('title')
+                            ->weight(FontWeight::Bold),
+                        TextEntry::make('authors.last_name')
+                            ->markdown()
+                            ->prose(),
+                    ]),
+                    Section::make([
+                        TextEntry::make('created_at')
+                            ->date(),
+                        TextEntry::make('published_date')
+                            ->date(),
+                    ])->grow(false),
+                ])->from('md')
             ]);
     }
 
@@ -74,6 +100,7 @@ class BookResource extends Resource
         return [
             'index' => Pages\ListBooks::route('/'),
             'create' => Pages\CreateBook::route('/create'),
+            'view' => Pages\ViewBook::route('/{record}'),
             'edit' => Pages\EditBook::route('/{record}/edit'),
         ];
     }
