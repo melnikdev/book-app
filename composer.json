@@ -13,6 +13,7 @@
         "laravel/reverb": "^1.0",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
+        "lorisleiva/laravel-actions": "^2.8",
         "mll-lab/laravel-graphiql": "^3.2",
         "nuwave/lighthouse": "^6.49",
         "spatie/laravel-permission": "^6.10",
@@ -26,7 +27,8 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "^3.7",
-        "pestphp/pest-plugin-laravel": "^3.0"
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "wulfheart/laravel-actions-ide-helper": "^0.8.0"
     },
     "autoload": {
         "psr-4": {

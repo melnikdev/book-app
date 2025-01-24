@@ -1,0 +1,14 @@
+input LoginInput {
+    email: String! @rules(apply: ["string", "email"])
+    password: String! @rules(apply: ["string", "min:8"])
+}
+
+type LoginResponse {
+    accessToken: String!
+    tokenType: String!
+    expiresIn: Int!
+}
+
+extend type Mutation {
+    login(data: LoginInput): LoginResponse!
+}
