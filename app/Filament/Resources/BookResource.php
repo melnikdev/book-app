@@ -8,6 +8,7 @@ use App\Filament\Resources\BookResource\RelationManagers;
 use App\Models\Book;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Split;
 use Filament\Infolists\Components\TextEntry;
@@ -16,6 +17,8 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class BookResource extends Resource
@@ -30,6 +33,10 @@ class BookResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')->required()->maxLength(255),
                 Forms\Components\DatePicker::make('published_date')->required()->maxDate(now()),
+                Forms\Components\Textarea::make('description'),
+                Forms\Components\FileUpload::make('cover')
+                    ->image()
+                    ->imageEditor(),
                 Forms\Components\Select::make('author_id')
                     ->multiple()
                     ->relationship('authors', 'last_name')
@@ -47,10 +54,11 @@ class BookResource extends Resource
                     ->exporter(BookExporter::class)
             ])
             ->columns([
-                Tables\Columns\TextColumn::make('id')->numeric()->sortable(),
-                Tables\Columns\TextColumn::make('title')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('authors.last_name')->label('Author')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('published_date')->label('Published Date')->date()->sortable(),
+                TextColumn::make('id')->numeric()->sortable(),
+                ImageColumn::make('cover')->width(100)->height(100),
+                TextColumn::make('title')->searchable()->sortable(),
+                TextColumn::make('authors.last_name')->label('Author')->searchable()->sortable(),
+                TextColumn::make('published_date')->label('Published Date')->date()->sortable(),
             ])
             ->filters([
                 //
@@ -70,21 +78,23 @@ class BookResource extends Resource
     {
         return $infolist
             ->schema([
+                Section::make([
+                    TextEntry::make('title')
+                        ->weight(FontWeight::Bold),
+                    TextEntry::make('description')
+                        ->prose(),
+                ]),
                 Split::make([
                     Section::make([
-                        TextEntry::make('title')
-                            ->weight(FontWeight::Bold),
-                        TextEntry::make('authors.last_name')
-                            ->markdown()
-                            ->prose(),
+                        ImageEntry::make('cover'),
                     ]),
                     Section::make([
-                        TextEntry::make('created_at')
-                            ->date(),
+                        TextEntry::make('authors.last_name')
+                            ->prose(),
                         TextEntry::make('published_date')
                             ->date(),
-                    ])->grow(false),
-                ])->from('md')
+                    ]),
+                ])->from('sm')
             ]);
     }
 
