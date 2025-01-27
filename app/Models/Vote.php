@@ -6,17 +6,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Comment extends Model
+class Vote extends Model
 {
     protected $fillable = [
-        'body',
         'user_id',
     ];
 
-    public function commentable(): MorphTo
+    public function votable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -24,10 +22,5 @@ class Comment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function votes(): MorphMany
-    {
-        return $this->morphMany(Vote::class, 'votable');
     }
 }
