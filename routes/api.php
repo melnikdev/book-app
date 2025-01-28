@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::get('/books', [BookController::class, 'index']);
+    Route::get('/books/search', [BookController::class, 'search']);
     Route::get('/books/{id}', [BookController::class, 'show']);
     Route::post('/books/{id}/comments', CommentBookUser::class);
 
