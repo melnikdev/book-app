@@ -19,7 +19,7 @@ class VoteUser
         $comment = Comment::query()->find($commentId);
 
         if (! $comment) {
-            return response()->json(['message' => 'Comment not found'], 404);
+            return ['data' => ['message' => 'Comment not found'], 'status' => 404];
         }
 
         $vote = $comment->votes()->where(['user_id' => Auth::id()])->first();
@@ -28,17 +28,19 @@ class VoteUser
             $vote->delete();
             $comment->decrement('rating');
 
-            return $comment;
+            return ['data' => ['message' => 'Vote deleted'], 'status' => 200];
         }
 
         $comment->votes()->create(['user_id' => Auth::id()]);
         $comment->increment('rating');
 
-        return $comment;
+        return ['data' => ['message' => 'Vote added'], 'status' => 201];
     }
 
     public function asController(int $commentId, ActionRequest $request): JsonResponse
     {
-        return response()->json($this->handle($commentId));
+        $response = $this->handle($commentId);
+
+        return response()->json($response['data'], $response['status']);
     }
 }
