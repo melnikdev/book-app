@@ -14,7 +14,7 @@ class VoteUser
 {
     use AsAction;
 
-    public function handle(int $commentId)
+    public function handle(int $commentId): array
     {
         $comment = Comment::query()->find($commentId);
 
