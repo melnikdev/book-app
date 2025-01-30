@@ -3,10 +3,13 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 use function Pest\Laravel\postJson;
+
+uses(RefreshDatabase::class);
 
 test('register succeeds with valid data', function () {
     $user = User::factory()->make(['password' => 'password']);
