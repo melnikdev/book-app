@@ -16,10 +16,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/books/{id}/comments', CommentBookUser::class);
 
     Route::post('/comments/{id}/vote', VoteUser::class);
-    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::get('/auth/me', [AuthController::class, 'me'])->name('me');
 });
 
-Route::post('/auth/login', LoginUser::class);
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/refresh', [AuthController::class, 'refresh']);
-Route::post('/auth/logout', [AuthController::class, 'logout']);
+Route::post('/auth/login', LoginUser::class)->name('login');
+Route::post('/auth/register', [AuthController::class, 'register'])->name('register');
+Route::post('/auth/refresh', [AuthController::class, 'refresh'])->name('refresh');
+Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
