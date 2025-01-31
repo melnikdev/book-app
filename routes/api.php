@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/books', [BookController::class, 'index']);
-    Route::get('/books/search', BookSearch::class);
-    Route::get('/books/{id}', [BookController::class, 'show']);
-    Route::post('/books/{id}/comments', CommentBookUser::class);
+    Route::get('/books', [BookController::class, 'index'])->name('books.index');
+    Route::get('/books/search', BookSearch::class)->name('books.search');
+    Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
+    Route::post('/books/{id}/comments', CommentBookUser::class)->name('books.comments.store');
 
     Route::post('/comments/{id}/vote', VoteUser::class);
     Route::get('/auth/me', [AuthController::class, 'me'])->name('me');
