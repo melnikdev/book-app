@@ -19,6 +19,7 @@ class BookFactory extends Factory
         return [
             "title" => fake()->realText(25),
             "published_date" => fake()->date(),
+            "description" => fake()->text(150),
         ];
     }
 }
