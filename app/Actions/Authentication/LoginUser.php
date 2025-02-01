@@ -23,20 +23,24 @@ class LoginUser
     public function handle(array $credentials): array
     {
         if (! $token = auth()->attempt($credentials)) {
-            throw new \RuntimeException('Invalid credentials');
+            return ['data' => ['error' => 'Unauthenticated.'], 'status' => 401];
         }
 
         return [
-            'accessToken' => $token,
-            'tokenType' => 'bearer',
-            'expiresIn' => auth()->factory()->getTTL() * 60
+            'data' => [
+                'accessToken' => $token,
+                'tokenType' => 'bearer',
+                'expiresIn' => auth()->factory()->getTTL() * 60
+            ],
+            'status' => 200
         ];
     }
 
     public function asController(ActionRequest $request): JsonResponse
     {
         $data = $request->only('email', 'password');
+        $response = $this->handle($data);
 
-        return response()->json($this->handle($data));
+        return response()->json($response['data'], $response['status']);
     }
 }

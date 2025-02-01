@@ -21,20 +21,25 @@ it('logs in user with valid credentials', function () {
     $result = LoginUser::run(['email' => 'user@example.com', 'password' => 'password123']);
 
     expect($result)->toBe([
-        'accessToken' => $mockedToken,
-        'tokenType' => 'bearer',
-        'expiresIn' => $mockedTTL * 60,
+        'data' => [
+            'accessToken' => $mockedToken,
+            'tokenType' => 'bearer',
+            'expiresIn' => $mockedTTL * 60,
+        ],
+        'status' => 200
     ]);
 });
 
-it('throws exception for invalid credentials', function () {
+it('Unauthenticated for invalid credentials', function () {
     Auth::shouldReceive('attempt')
         ->once()
         ->with(['email' => 'user@example.com', 'password' => 'wrong_password'])
         ->andReturn(false);
 
-    $this->expectException(RuntimeException::class);
-    $this->expectExceptionMessage('Invalid credentials');
+    $result = LoginUser::run(['email' => 'user@example.com', 'password' => 'wrong_password']);
 
-    LoginUser::run(['email' => 'user@example.com', 'password' => 'wrong_password']);
+    expect($result)->toBe([
+        'data' => ['error' => 'Unauthenticated.'],
+        'status' => 401
+    ]);
 });
