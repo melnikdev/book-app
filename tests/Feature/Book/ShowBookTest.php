@@ -22,8 +22,8 @@ test('show returns book details for a valid ID', function () {
 
     $response
         ->assertStatus(200)
-        ->assertJsonPath('data.id', $book->id)
-        ->assertJsonPath('data.title', $book->title);
+        ->assertJsonPath('id', $book->id)
+        ->assertJsonPath('title', $book->title);
 });
 
 test('show returns 404 for an invalid ID', function () {

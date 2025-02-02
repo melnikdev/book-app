@@ -6,11 +6,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\BookResource;
 use App\Models\Book;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Traits\ApiResponses;
+use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
 class BookController extends Controller
 {
+    use ApiResponses;
+
     #[OA\Get(
         path: '/api/v1/books/{id}',
         summary: 'Get details of a specific book',
@@ -36,10 +39,13 @@ class BookController extends Controller
             )
         ]
     )]
-    public function show(int $id): BookResource
+    public function show(int $id): JsonResponse
     {
-        $book = Book::query()->with(['authors', 'comments.user'])->findOrFail($id);
-        return new BookResource($book);
+        $book = Book::query()->with(['authors', 'comments.user'])->find($id);
+        if (! $book) {
+            return $this->notFoundResponse([], 'Book not found');
+        }
+        return $this->successResponse(new BookResource($book));
     }
 
     #[OA\Get(
@@ -73,9 +79,9 @@ class BookController extends Controller
             )
         ]
     )]
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
         $books = Book::query()->with(['authors', 'comments.user'])->paginate();
-        return BookResource::collection($books);
+        return $this->successResponse(BookResource::collection($books)->toResponse(request())->getData());
     }
 }

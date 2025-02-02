@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Actions\Authentication;
 
+use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
+use Symfony\Component\HttpFoundation\Response;
 
 class LoginUser
 {
-    use AsAction;
+    use AsAction, ApiResponses;
 
     public function rules(): array
     {
@@ -20,27 +22,33 @@ class LoginUser
         ];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function handle(array $credentials): array
     {
         if (! $token = auth()->attempt($credentials)) {
-            return ['data' => ['error' => 'Unauthenticated.'], 'status' => 401];
+            throw new \Exception('Unauthenticated.', Response::HTTP_UNAUTHORIZED);
         }
 
         return [
-            'data' => [
-                'accessToken' => $token,
-                'tokenType' => 'bearer',
-                'expiresIn' => auth()->factory()->getTTL() * 60
-            ],
-            'status' => 200
+            'accessToken' => $token,
+            'tokenType' => 'bearer',
+            'expiresIn' => auth()->factory()->getTTL() * 60
         ];
     }
 
     public function asController(ActionRequest $request): JsonResponse
     {
         $data = $request->only('email', 'password');
-        $response = $this->handle($data);
 
-        return response()->json($response['data'], $response['status']);
+        try {
+            $response = $this->handle($data);
+        } catch (\Exception $e) {
+            return $this->errorResponse([], $e->getMessage(), $e->getstatusCode());
+        }
+
+        return $this->successResponse($response);
     }
+
 }

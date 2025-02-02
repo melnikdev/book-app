@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -12,6 +13,7 @@ use OpenApi\Attributes as OA;
 
 class AuthController
 {
+    use ApiResponses;
 
     #[OA\Post(
         path: '/api/v1/auth/register',
@@ -79,12 +81,12 @@ class AuthController
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return $this->successResponse(['message' => 'Successfully logged out']);
     }
 
     public function me(Request $request): JsonResponse
     {
-        return response()->json(auth()->user());
+        return $this->successResponse(auth()->user());
     }
 
     public function refresh(Request $request): JsonResponse
@@ -94,7 +96,7 @@ class AuthController
 
     protected function respondWithToken($token): JsonResponse
     {
-        return response()->json([
+        return $this->successResponse([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
