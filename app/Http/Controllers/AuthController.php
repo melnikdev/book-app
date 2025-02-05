@@ -61,10 +61,12 @@ class AuthController
     )]
     public function register(RegisterRequest $request): JsonResponse
     {
+        $validated = $request->safe();
+
         $user = User::query()->create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
         ]);
 
         $token = JWTAuth::fromUser($user);
