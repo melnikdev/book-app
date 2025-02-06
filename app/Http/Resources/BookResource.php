@@ -39,6 +39,7 @@ class BookResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'published_date' => $this->published_date,
+            'description' => $this->description,
             'authors' => AuthorResource::collection($this->authors),
             'comments' => CommentResource::collection($this->comments),
         ];

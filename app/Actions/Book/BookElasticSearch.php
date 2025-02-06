@@ -10,30 +10,26 @@ use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Pipeline;
 use Lorisleiva\Actions\ActionRequest;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class BookSearch
+class BookElasticSearch
 {
     use AsAction, ApiResponses;
 
-    public function handle()
+    public function handle(Request $request)
     {
-        $pipelines = [
-            ByTitle::class,
-            ByAuthor::class
-        ];
-
-        return Pipeline::send(Book::query()->with(['authors', 'comments.user']))
-            ->through($pipelines)
-            ->thenReturn()
-            ->paginate();
+        if ($request->has('description')) {
+            return Book::search('description:'.$request->get('description'))->paginate();
+        }
+        return Book::query()->paginate();
     }
 
     public function asController(ActionRequest $request): JsonResponse
     {
-        $books = $this->handle();
+        $books = $this->handle($request);
         return $this->successResponse(BookResource::collection($books)->response()->getData());
     }
 }
