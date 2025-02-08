@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Events\UserRegisteredEvent;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Traits\ApiResponses;
@@ -70,6 +71,8 @@ class AuthController
         ]);
 
         $token = JWTAuth::fromUser($user);
+
+        UserRegisteredEvent::dispatch($user);
 
         return $this->respondWithToken($token);
     }

@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "lorisleiva/laravel-actions": "^2.8",
+        "mateusjunges/laravel-kafka": "^2.4",
         "mll-lab/laravel-graphiql": "^3.2",
         "nuwave/lighthouse": "^6.49",
         "spatie/laravel-permission": "^6.10",

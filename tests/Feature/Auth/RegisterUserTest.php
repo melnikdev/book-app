@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Events\UserRegisteredEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Mockery;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -12,6 +14,8 @@ use function Pest\Laravel\postJson;
 uses(RefreshDatabase::class);
 
 test('register succeeds with valid data', function () {
+    Event::fake();
+
     $user = User::factory()->make(['password' => 'password']);
     $password = $user->password;
 
@@ -26,6 +30,8 @@ test('register succeeds with valid data', function () {
         'password' => $password,
         'password_confirmation' => $password,
     ]);
+
+    Event::assertDispatched(UserRegisteredEvent::class);
 
     $response->assertStatus(200)
         ->assertJsonStructure([
