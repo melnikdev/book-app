@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "./;pb";
+
+message EventRequest {
+    int64 id = 1;
+}
+
+message EventResponse {
+    int64 id = 1;
+    string name = 2;
+    bool active = 3;
+}
+
+service AddService {
+    rpc GetEvent(EventRequest) returns (EventResponse);
+}
